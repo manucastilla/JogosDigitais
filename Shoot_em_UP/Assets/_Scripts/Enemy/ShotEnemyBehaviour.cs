@@ -18,14 +18,12 @@ public class ShotEnemyBehaviour : SteerableBehaviour
 
     void Start()
     {
-        // Vector3 posPlayer = GameObject.FindWithTag("Player").transform.position;
-        // direction = (posPlayer - transform.position).normalized;
+        Vector3 posPlayer = GameObject.FindWithTag("Player").transform.position;
+        direction = (posPlayer - transform.position).normalized;
     }
 
     void Update()
     {
-        Vector3 posPlayer = GameObject.FindWithTag("Player").transform.position;
-        direction = (posPlayer - transform.position).normalized;
         Thrust(direction.x, direction.y);
     }
 

@@ -33,18 +33,22 @@ public class State : MonoBehaviour
 
     public void LateUpdate()
     {
-        // Para cada transição que esse estado tiver
-
-        // é feita a verificação de sua condição
-        foreach (Transition t in transitions)
+        if (GameObject.FindWithTag("Player"))
         {
-            if (t.condition.Test())
-            {
-                t.target.enabled = true;
-                this.enabled = false;
-                return;
-            }
-        }
-    }
+            // Para cada transição que esse estado tiver
 
+            // é feita a verificação de sua condição
+            foreach (Transition t in transitions)
+            {
+                if (t.condition.Test())
+                {
+                    t.target.enabled = true;
+                    this.enabled = false;
+                    return;
+                }
+            }
+
+        }
+
+    }
 }

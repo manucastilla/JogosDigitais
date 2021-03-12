@@ -2,20 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : SteerableBehaviour, IShooter, IDamageable
+public class EnemyController : SteerableBehaviour, IDamageable, IShooter
 {
 
     public GameObject tiro;
+    GameManager gm;
 
+    private Vector3 screenBounds;
+
+    private void Start()
+    {
+        gm = GameManager.GetInstance();
+    }
     public void Shoot()
     {
-        Instantiate(tiro, transform.position, Quaternion.identity);
-        //throw new System.NotImplementedException();
+        if (GameObject.FindWithTag("Player"))
+        {
+            Instantiate(tiro, transform.position, Quaternion.identity);
+            //throw new System.NotImplementedException();
+        }
     }
     public int lifes = 2;
     public void TakeDamage()
     {
-
+        gm.pontos += 10;
         lifes--;
         print(lifes);
         if (lifes <= 0) Die();
@@ -23,20 +33,34 @@ public class EnemyController : SteerableBehaviour, IShooter, IDamageable
 
     public void Die()
     {
+        gm.pontos += 30;
         Destroy(gameObject);
     }
 
-    float angle = 0;
+    // float angle = 0;
+
+    public void OnBecameInvisible()
+    {
+        Die();
+
+    }
 
     private void FixedUpdate()
     {
-        angle += 0.1f;
-        Mathf.Clamp(angle, 0.0f, 2.0f * Mathf.PI);
-        float x = Mathf.Sin(angle);
-        float y = Mathf.Cos(angle);
+        if (GameObject.FindWithTag("Player"))
+        {
 
-        Thrust(x, y);
 
+            if (transform.position.x < (screenBounds.x - 15))
+            {
+                Destroy(gameObject);
+            }
+
+        }
+        else
+        {
+            Die();
+        }
     }
 
 

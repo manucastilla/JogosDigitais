@@ -1,25 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : SteerableBehaviour, IShooter, IDamageable
 {
+
+    GameManager gm;
     public AudioClip shootSFX;
-    private int lifes;
+
     public GameObject bullet;
     public Transform arma01;
+
     public float shootDelay = 0.25f;
 
     private float _lattShootTimestamp = 0.0f;
     Animator animator;
+
+    public HealthBar healthBar;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
-        lifes = 10;
+        healthBar.SetMaxHealth();
+        gm = GameManager.GetInstance();
+
     }
 
     void FixedUpdate()
     {
+        if (gm.gameState != GameManager.GameState.GAME) return;
+
         float yInput = Input.GetAxisRaw("Vertical");
         float xInput = Input.GetAxisRaw("Horizontal");
         Thrust(xInput, yInput);
@@ -35,6 +46,13 @@ public class PlayerController : SteerableBehaviour, IShooter, IDamageable
         {
             Shoot();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && gm.gameState == GameManager.GameState.GAME)
+        {
+            gm.ChangeState(GameManager.GameState.PAUSE);
+        }
+
+
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -56,13 +74,20 @@ public class PlayerController : SteerableBehaviour, IShooter, IDamageable
 
     public void TakeDamage()
     {
-        lifes--;
-        if (lifes <= 0) Die();
+        gm.health--;
+        healthBar.SetHealth(gm.health);
+        if (gm.health <= 0) Die();
     }
 
     public void Die()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        if (gm.health <= 0 && gm.gameState == GameManager.GameState.GAME)
+        {
+            gm.ChangeState(GameManager.GameState.ENDGAME);
+        }
+        // Destroy(gameObject);
+
     }
 
 }
