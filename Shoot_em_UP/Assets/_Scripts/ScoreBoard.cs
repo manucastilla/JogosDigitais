@@ -109,7 +109,7 @@ public class ScoreBoard : MonoBehaviour
             NAME.text += collectedStats[i].name + "\n";
             SCORE.text += collectedStats[i].score + "\n";
             RANKING.text += (i + 1) + "\n";
-
+            print(i);
         }
     }
 
