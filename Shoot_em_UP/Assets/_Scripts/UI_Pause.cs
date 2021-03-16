@@ -18,6 +18,7 @@ public class UI_Pause : MonoBehaviour
     public void Inicio()
     {
         gm.ChangeState(GameManager.GameState.MENU);
+        gm.pontos = 0;
         SceneManager.LoadScene(0);
     }
 
